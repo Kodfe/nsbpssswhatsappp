@@ -5,7 +5,7 @@
   "description": "WhatsApp Web gateway for NSB POS low stock alerts",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node install-chrome.js && node server.js",
     "install:chrome": "npx puppeteer browsers install chrome --path ./.cache/puppeteer"
   },
   "dependencies": {
