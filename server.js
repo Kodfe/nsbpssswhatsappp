@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const path = require('path');
+const { execFileSync } = require('child_process');
 const express = require('express');
 const qrcode = require('qrcode');
 
@@ -13,7 +14,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'nsb@admin123';
 const API_TOKEN = process.env.API_TOKEN || crypto.createHash('sha256').update(ADMIN_PASSWORD).digest('hex').slice(0, 32);
 const DEFAULT_TO = normalizeNumber(process.env.DEFAULT_TO || '');
 const PUBLIC_URL = (process.env.PUBLIC_URL || '').replace(/\/$/, '');
-const CHROME_EXECUTABLE_PATH = process.env.PUPPETEER_EXECUTABLE_PATH || process.env.CHROME_PATH || '';
+const CHROME_EXECUTABLE_PATH = findChromeExecutable();
 
 let client;
 let status = 'booting';
@@ -61,6 +62,19 @@ function normalizeNumber(value) {
 function chatIdFor(number) {
   const normalized = normalizeNumber(number);
   return normalized ? `${normalized}@c.us` : '';
+}
+
+function findChromeExecutable() {
+  if (process.env.PUPPETEER_EXECUTABLE_PATH) return process.env.PUPPETEER_EXECUTABLE_PATH;
+  if (process.env.CHROME_PATH) return process.env.CHROME_PATH;
+
+  for (const command of ['chromium', 'chromium-browser', 'google-chrome', 'google-chrome-stable']) {
+    try {
+      return execFileSync('which', [command], { encoding: 'utf8' }).trim();
+    } catch {}
+  }
+
+  return '';
 }
 
 function publicUrl(req) {
