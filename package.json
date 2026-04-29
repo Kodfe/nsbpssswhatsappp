@@ -1,0 +1,17 @@
+{
+  "name": "nsb-whatsapp-alert",
+  "version": "1.0.0",
+  "private": true,
+  "description": "WhatsApp Web gateway for NSB POS low stock alerts",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "install:chrome": "npx puppeteer browsers install chrome --path ./.cache/puppeteer"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "puppeteer": "^24.31.0",
+    "qrcode": "^1.5.4",
+    "whatsapp-web.js": "^1.34.7"
+  }
+}
